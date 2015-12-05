@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.*;
 
 import aima.core.logic.propositional.inference.DPLL;
 import aima.core.logic.propositional.inference.DPLLSatisfiable;
@@ -18,7 +19,7 @@ import aima.core.logic.propositional.visitors.SymbolCollector;
 
 public class Solver {
 
-	static String solve(String toParse)
+	static ArrayList<String> dpll(String toParse)
 	{
 		DPLL dpll = new OptimizedDPLL();
 		PLParser parser = new PLParser();
@@ -30,17 +31,15 @@ public class Solver {
 		boolean succeded = dpll.dpll(clauses,symbols, model);
 		if(succeded)
 		{
-			String myModel = model.toString();
-			StringBuilder to_output = new StringBuilder();
-			return myModel;
+			return generateTrueList(model, symbols);
 		}
 		else
 		{
-			return "Failed";
+			return null;
 		}
 	}
 	
-	static String walkSAT(String toParse)
+	static ArrayList<String> walkSAT(String toParse)
 	{
 		final int give_up = 100000;
 		WalkSAT walk = new WalkSAT();
@@ -50,13 +49,27 @@ public class Solver {
 		Model model = walk.walkSAT(clauses, 0.5, give_up);
 		if(model == null)
 		{
-			return "Failed";
+			return null;
 		}
 		else
 		{	
-			String myModel = model.toString();	
-			return myModel;
+			List<PropositionSymbol> symbols = new ArrayList<PropositionSymbol>(
+					SymbolCollector.getSymbolsFrom(sentence));
+			return generateTrueList(model, symbols);
 		}
+	}
+	
+	static ArrayList<String> generateTrueList(Model model, List<PropositionSymbol> symbols)
+	{
+		ArrayList<String> to_return = new ArrayList<String>();
+		for(PropositionSymbol a : symbols)
+		{
+			if(model.isTrue(a))
+			{
+				to_return.add(a.toString());
+			}
+		}
+		return to_return;
 	}
 
 }
