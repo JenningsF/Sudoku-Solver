@@ -3,7 +3,7 @@ import java.util.*;
 import java.io.*;
 
 public class ClauseGenerator3 {
-	public static int[][] puzzle = new int[10][10];
+	public static int[][] puzzle; 
 	public static int n;
 	public static int n2;
 	
@@ -12,7 +12,6 @@ public class ClauseGenerator3 {
 		File f = new File(filename);
 		try{
 			Scanner sc = new Scanner(f);    
-			
 			for(int r = 1; r <= n2; ++r){
 				String input = sc.next();	 
 				
@@ -77,9 +76,7 @@ public class ClauseGenerator3 {
 	
 	// bool expressions for block restrictions
 	public static String knownBlock(int row, int col, int value){	
-		
 		String s = "";
-		
 		int squareRow = -1, squareCol = -1;
 		boolean rowFound = false;
 		boolean colFound = false;
@@ -113,7 +110,6 @@ public class ClauseGenerator3 {
 	// bool expressions for the known values
 	public static String getKnown(){
 		String s = "# bool expressions for the known values\n";
-		
 		//go through every entry in puzzle
 		for(int r = 1; r <=n2; ++r){
 			for(int c = 1; c <= n2; ++c){
@@ -137,7 +133,6 @@ public class ClauseGenerator3 {
 	
 	// general instructions
 	public static String extra(){
-		
 		String s = "# extra\n";
 		for(int r = 1; r <= n2; ++r){
 			for(int c = 1; c <= n2; ++c){
@@ -149,22 +144,8 @@ public class ClauseGenerator3 {
 				s += "\n";
 			}
 		}
-		// try{
-			// PrintWriter out =  new PrintWriter("out.txt");
-			// out.print(s);
-			// out.close();
-		// }
-		// catch (FileNotFoundException ex) {
-			// System.out.println("ERROR! File not found!");
-			// System.exit(0);
-		// } 
-		return s;
-	
+		return s;	
 	}
-	
-	
-	
-	
 	
 	// get generic bool expressions
 	public static String getGeneric(){
@@ -192,7 +173,6 @@ public class ClauseGenerator3 {
 	// bool expressions for row restrictions
 	public static String rows(){
 		String s = "# bool expressions for row restrictions\n";
-		
 		for(int r = 1; r <= n2; ++r){
 			for(int i = 1; i <= n2; ++i){
 				for(int c = 1; c <= n2; ++c){
@@ -208,7 +188,6 @@ public class ClauseGenerator3 {
 	// bool expressions for col restrictions
 	public static String cols(){
 		String s = "# bool expressions for col restrictions\n";
-		
 		for(int c = 1; c <= n2; ++c){
 			for(int i = 1; i <= n2; ++i){
 				for(int r = 1; r <= n2; ++r){
@@ -253,6 +232,7 @@ public class ClauseGenerator3 {
 		String filename = "input3x3.txt";
 		n = 3;
 		n2 = n*n;
+		puzzle = new int[n2+1][n2+1];
 		getPuzzle(filename);
 		printPuzzle();
 		String ss = getGeneric();
@@ -267,7 +247,6 @@ public class ClauseGenerator3 {
 			System.out.println("ERROR! File not found!");
 			System.exit(0);
 		} 
-		
 		System.out.println(ss);
 	}
 }
