@@ -3,7 +3,7 @@ import java.util.*;
 import java.io.*;
 
 public class ClauseGenerator3 {
-	public static int[][] puzzle; 
+	public static char[][] puzzle; 
 	public static int n;
 	public static int n2;
 	
@@ -18,9 +18,9 @@ public class ClauseGenerator3 {
 				for(int c = 1; c <= n2; ++c){
 					char a = input.charAt(c-1);
 					if(a != '.'){
-						String a2 = ""+a;
-						int b = Integer.parseInt(a2);
-						puzzle[r][c] = b;
+						// String a2 = ""+a;
+						// int b = Integer.parseInt(a2);
+						puzzle[r][c] = a;
 					}
 				}
 			}
@@ -229,10 +229,10 @@ public class ClauseGenerator3 {
 	}
 	
 	public static void main(String [] args){
-		String filename = "input3x3.txt";
-		n = 3;
+		String filename = "input5x5.txt";
+		n = 5;
 		n2 = n*n;
-		puzzle = new int[n2+1][n2+1];
+		puzzle = new char[n2+1][n2+1];
 		getPuzzle(filename);
 		printPuzzle();
 		String ss = getGeneric();
