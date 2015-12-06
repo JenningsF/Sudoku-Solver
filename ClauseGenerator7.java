@@ -4,10 +4,10 @@ import java.io.*;
 
 public class ClauseGenerator7 {
 	public static char[][] puzzle; 
-	// public static char[] validValues = {'1','2','3','4','5','6','7','8','9'};
-	public static char[] validValues = {'1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P'};
-	// public static char[] validValues = {'1','2','3','4'};
-	// public static char[] validValues = {'1','2','A','B'};
+	public static char[] validValues;
+	public static char[] validValues3 = {'1','2','3','4','5','6','7','8','9'};
+	public static char[] validValues5 = {'1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P'};
+	public static char[] validValues2 = {'1','2','3','4'};
 	public static int n;
 	public static int n2;
 	
@@ -278,6 +278,18 @@ public class ClauseGenerator7 {
 		String filename = args[0];
 		n = Integer.parseInt(args[1]);
 		n2 = n*n;
+		
+		if(n == 2){
+			validValues = validValues2;
+		}
+		else if(n == 3){
+			validValues = validValues3;
+		}
+		else if(n == 5){
+			validValues = validValues5;
+		}
+		
+		
 		puzzle = new char[n2+1][n2+1];
 		System.out.println("original:");
 		getPuzzle(filename);
