@@ -88,41 +88,41 @@ public class ClauseGenerator7 {
 	}
 	
 	// generate bool expression for a certain r,c entry
-	public static String knownCell(int r, int c, char value){
-		String s = "r" + r + "c" + c + "_" + value + "\n";
+	public static StringBuilder knownCell(int r, int c, char value){
+		StringBuilder s = new StringBuilder().append("r").append(r).append("c").append(c).append("_").append(value).append("\n");
 		for(int i = 0; i < validValues.length; ++i){
 			if(validValues[i] != value)
-				s += "~r" + r + "c" + c + "_" + validValues[i] + "\n";
+				s.append("~r").append(r).append("c").append(c).append("_").append(validValues[i]).append("\n");
 		}
-		s += "\n";
+		s.append("\n");
 		return s;
 	}
 	
 	// generate bool expression for a row
-	public static String knownRow(int r, int c, char value){
-		String s = "";
+	public static StringBuilder knownRow(int r, int c, char value){
+		StringBuilder s = new StringBuilder();
 		for(int col = 1; col <= n2; ++col){
 			if(col != c)
-				s += "~r" + r + "c" + col + "_" + value + "\n";
+				s.append("~r").append(r).append("c").append(col).append("_").append(value).append("\n");
 		}
-		s += "\n";
+		s.append("\n");
 		return s;
 	}
 	
 	// generate bool expression for a col
-	public static String knownCol(int r, int c, char value){
-		String s = "";
+	public static StringBuilder knownCol(int r, int c, char value){
+		StringBuilder s = new StringBuilder();
 		for(int row = 1; row <= n2; ++row){
 			if(row != r)
-				s += "~r" + row + "c" + c + "_" + value + "\n";
+				s.append("~r").append(row).append("c").append(c).append("_").append(value).append("\n");
 		}
-		s += "\n";
+		s.append("\n");
 		return s;
 	}
 	
 	// bool expressions for block restrictions
-	public static String knownBlock(int row, int col, char value){	
-		String s = "";
+	public static StringBuilder knownBlock(int row, int col, char value){	
+		StringBuilder s = new StringBuilder();
 		int squareRow = -1, squareCol = -1;
 		boolean rowFound = false;
 		boolean colFound = false;
@@ -145,26 +145,26 @@ public class ClauseGenerator7 {
 		for(r = squareRow; r < (squareRow+n); ++r){
 			for(int c = squareCol; c < (squareCol+n); ++c){
 				if(!(r == row || c == col))
-					s += "~r" + r + "c" + c + "_" + value + "\n";
+					s.append("~r").append(r).append("c").append(c).append("_").append(value).append("\n");
 			}
 		}
-		s += "\n";
+		s.append("\n");
 		return s;
 	}
 	
 	
 	// bool expressions for the known values
-	public static String getKnown(){
-		String s = "";
+	public static StringBuilder getKnown(){
+		StringBuilder s = new StringBuilder();
 		//go through every entry in puzzle
 		for(int r = 1; r <=n2; ++r){
 			for(int c = 1; c <= n2; ++c){
 				if(puzzle[r][c] != ' '){
 					// s += "# known value (" + r + "," + c + ") " + puzzle[r][c] + ":\n";
-					s += knownCell(r,c,puzzle[r][c]);
-					s += knownRow(r,c,puzzle[r][c]);
-					s += knownCol(r,c,puzzle[r][c]);
-					s += knownBlock(r,c,puzzle[r][c]);
+					s.append(knownCell(r,c,puzzle[r][c]));
+					s.append(knownRow(r,c,puzzle[r][c]));
+					s.append(knownCol(r,c,puzzle[r][c]));
+					s.append(knownBlock(r,c,puzzle[r][c]));
 				}
 			}
 		}
@@ -178,99 +178,100 @@ public class ClauseGenerator7 {
 	*/
 	
 	// general instructions
-	public static String extra(){
-		String s = "";
+	public static StringBuilder extra(){
+		StringBuilder s = new StringBuilder();
 		for(int r = 1; r <= n2; ++r){
 			for(int c = 1; c <= n2; ++c){
 				for(int i = 0; i < validValues.length-1; ++i){
 					for(int j = i+1; j < validValues.length; ++j){
-						s += "~r" + r + "c" + c + "_" + validValues[i] + " " + "~r" + r + "c" + c + "_" + validValues[j] + "\n";
+						s.append("~r").append(r).append("c").append(c).append("_").append(validValues[i]).append(" ").append("~r").append(r)
+							.append("c").append(c).append("_").append(validValues[j]).append("\n");
 					}
 				}
-				s += "\n";
+				s.append("\n");
 			}
 		}
 		return s;	
 	}
 	
 	// get generic bool expressions
-	public static String getGeneric(){
-		String s = cells();
-		s += rows();
-		s += cols();
-		s += blocks();
+	public static StringBuilder getGeneric(){
+		StringBuilder s = cells();
+		s.append(rows());
+		s.append(cols());
+		s.append(blocks());
 		return s;
 	}
 	
 	// bool expressions for the values each cell can have
-	public static String cells(){
-		String s = "";
+	public static StringBuilder cells(){
+		StringBuilder s = new StringBuilder();
 		for(int r = 1; r <= n2; ++r){
 			for(int c = 1; c <= n2; ++c){
 				for(int i = 0; i < validValues.length; ++i){
-					s += "r" + r + "c" + c + "_" + validValues[i] + " ";
+					s.append("r").append(r).append("c").append(c).append("_").append(validValues[i]).append(" ");
 				}
-				s += "\n";
+				s.append("\n");
 			}
 		}
 		return s;
 	}
 	
 	// bool expressions for row restrictions
-	public static String rows(){
-		String s = "";
+	public static StringBuilder rows(){
+		StringBuilder s = new StringBuilder();
 		for(int r = 1; r <= n2; ++r){
 			for(int i = 0; i < validValues.length; ++i){
 				for(int c = 1; c <= n2; ++c){
-					s += "r" + r + "c" + c + "_" + validValues[i] + " ";
+					s.append("r").append(r).append("c").append(c).append("_").append(validValues[i]).append(" ");
 				}
-				s += "\n";
+				s.append("\n");
 			}
-			s += "\n";
+			s.append("\n");
 		}
 		return s;
 	}
 	
 	// bool expressions for col restrictions
-	public static String cols(){
-		String s = "";
+	public static StringBuilder cols(){
+		StringBuilder s = new StringBuilder();
 		for(int c = 1; c <= n2; ++c){
 			for(int i = 0; i < validValues.length; ++i){
 				for(int r = 1; r <= n2; ++r){
-					s += "r" + r + "c" + c + "_" + validValues[i] + " ";
+					s.append("r").append(r).append("c").append(c).append("_").append(validValues[i]).append(" ");
 				}
-				s += "\n";
+				s.append("\n");
 			}
-			s += "\n";
+			s.append("\n");
 		}
 		return s;
 	}
 	
 	// generate expressions for a block
-	public static String square(int row, int col){
-		String s = "";
+	public static StringBuilder square(int row, int col){
+		StringBuilder s = new StringBuilder();
 		for(int i = 0; i < validValues.length; ++i){
 			for(int r = row; r < (row + n); ++r){
 				for(int c = col; c < (col + n); ++c){
-					s += "r" + r + "c" + c + "_" + validValues[i] + " ";
+					s.append("r").append(r).append("c").append(c).append("_").append(validValues[i]).append(" ");
 				}
 			}
-			s += "\n";
+			s.append("\n");
 		}
-		s += "\n";
+		s.append("\n");
 		return s;
 	}
 	
 	// bool expressions for block restrictions
-	public static String blocks(){
-		String s = "";
+	public static StringBuilder blocks(){
+		StringBuilder s = new StringBuilder();
 		
 		for(int r = 1; r <= n2; r += n){
 			for(int c = 1; c <= n2; c += n){
-				s += square(r,c);
+				s.append(square(r,c));
 			}
 		}
-		s += "\n";		
+		s.append("\n");		
 		return s;
 	}
 	
@@ -295,9 +296,9 @@ public class ClauseGenerator7 {
 		getPuzzle(filename);
 		printPuzzle();
 		System.out.println("*********");
-		String ss = getGeneric();
-		ss += getKnown();
-		ss += extra();
+		StringBuilder ss = getGeneric();
+		ss.append(getKnown());
+		ss.append(extra());
 		try{
 			PrintWriter out =  new PrintWriter(args[2]);
 			out.print(ss);
@@ -310,7 +311,7 @@ public class ClauseGenerator7 {
 		// System.out.println(ss);
 		
 		
-		String result = Solver.SAT(ss);
+		String result = Solver.SAT(ss.toString());
 		finishPuzzle(result);
 		
 	}
