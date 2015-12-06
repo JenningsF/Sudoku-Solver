@@ -1,6 +1,6 @@
 all: cFiles javaFiles
 	
-cFiles: sat0.c gb_flip.c gb_flip.h
+cFiles: sat10.c gb_flip.c gb_flip.h
 	gcc sat10.c gb_flip.c -o SAT
 
 javaFiles: ClauseGenerator7.java Solver.java
