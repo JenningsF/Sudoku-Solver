@@ -6,6 +6,7 @@ public class ClauseGenerator7 {
 	public static char[][] puzzle; 
 	public static char[] validValues;
 	public static char[] validValues3 = {'1','2','3','4','5','6','7','8','9'};
+	public static char[] validValues4 = {'1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G'};
 	public static char[] validValues5 = {'1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P'};
 	public static char[] validValues2 = {'1','2','3','4'};
 	public static int n;
@@ -285,6 +286,9 @@ public class ClauseGenerator7 {
 		}
 		else if(n == 3){
 			validValues = validValues3;
+		}
+		else if(n ==4){
+			validValues = validValues4;
 		}
 		else if(n == 5){
 			validValues = validValues5;
