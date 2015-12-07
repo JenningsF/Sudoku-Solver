@@ -1,19 +1,39 @@
+/*
+	PDDL Parser
+	Created by Jennings Fairchild
+
+	Parses txt files into a pddl problem file.
+	Sudoku board txt files should be in the following format:
+
+	....
+	12..
+	3...
+	...1
+
+	With '.' acting as blank cells.
+
+	Compile: g++ -std=c++11 pddl_parser.cpp -o parser
+	Run: ./parser
+*/
+
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <map>
+#include <cstdio>
+#include <cstdlib>
 
 using namespace std;
-
-const int MAX_CHARS_PER_LINE = 512;
-const int MAX_TOKENS_PER_LINE = 20;
-const char* const DELIMITER = " ";
 
 int main()
 {
 	cout << "*----------------------------------------*" << endl;
-	cout << "\tRunning Sudoku PDDL Parser" << endl;
+	cout << "\tRunning Sudoku PDDL Parser\n" << endl;
+	cout << "Can work with sudoku puzzles up to 30x30." << endl;
+	cout << "Uses only 1-9 and then letters starting" << endl;
+	cout << "at 'A' and going to a maximum of 'U'." << endl;
 	cout << "*----------------------------------------*" << endl;
+	// Ask for problem number for pddl problem file
 	cout << "\nPlease enter problem number:" << endl;
 	int probNum;
 	cin >> probNum;
@@ -24,33 +44,7 @@ int main()
 		cin.ignore(256,'\n');
 		cin >> probNum;
 	}
-
-	// Creating .pddl file
-	ofstream outFile;
-	string outFileName = "sudoku_" + to_string(probNum) + ".pddl";
-	outFile.open(outFileName);
-
-	// Start writing to .pddl file
-	outFile << "(define\n";
-	outFile << "\t(problem sudoku_" + to_string(probNum) + ")\n";
-	outFile << "\t(:domain sudoku)\n";
-	outFile << "\t(:init\n";
-	outFile << "\t\t(= (value_of one) 1)\n";
-	outFile << "\t\t(= (value_of two) 2)\n";
-	outFile << "\t\t(= (value_of three) 3)\n";
-	outFile << "\t\t(= (value_of four) 4)\n";
-	outFile << "\t\t(= (value_of five) 5)\n";
-	outFile << "\t\t(= (value_of six) 6)\n";
-	outFile << "\t\t(= (value_of seven) 7)\n";
-	outFile << "\t\t(= (value_of eight) 8)\n";
-	outFile << "\t\t(= (value_of nine) 9)\n\n";
-
-	// Enumerates integers to corresponding strings
-	map<int, string> numbers;
-	numbers[0] = "."; numbers[1] = "one"; numbers[2] = "two"; numbers[3] = "three";
-	numbers[4] = "four"; numbers[5] = "five"; numbers[6] = "six";
-	numbers[7] = "seven"; numbers[8] = "eight"; numbers[9] = "nine";
-
+	
 	// Acquire input file name
 	cout << "\nWhat file are you reading from?" << endl;
 	string inFileName;
@@ -63,6 +57,18 @@ int main()
 		cin.ignore(256,'\n');
 		cin >> inFileName;
 	}
+
+	// Checks if input file is opened
+	cout << "\nOpening input file...";
+	ifstream fileIn;
+	fileIn.open(inFileName);
+	if (!fileIn.is_open()) {
+		cout << "Failed." << endl;
+		cout << "Error: Unable to open file" << endl;
+		cout << "Exiting program now." << endl;
+		exit(EXIT_FAILURE);
+	}
+	else cout << "Success!" << endl;
 
 	// Acquire size of board
 	cout << "\nPlease enter size of the board:" << endl;
@@ -77,25 +83,70 @@ int main()
 		cin >> boardSize;
 	}
 
-	// Checks if input file is opened
-	cout << "\nOpening input file...";
-	ifstream fileIn;
-	fileIn.open(inFileName);
-	if (!fileIn.is_open()) {
-		cout << "Failed." << endl;
-		cout << "Error: Unable to open file" << endl;
+	// Enumerates integers to corresponding strings
+	map<int, string> numbers;
+	numbers[0] = "."; numbers[1] = "one"; numbers[2] = "two"; numbers[3] = "three";
+	numbers[4] = "four"; numbers[5] = "five"; numbers[6] = "six"; numbers[7] = "seven";
+	numbers[8] = "eight"; numbers[9] = "nine"; numbers[10] = "ten"; numbers[11] = "eleven";
+	numbers[12] = "twelve"; numbers[13] = "thirteen"; numbers[14] = "fourteen";
+	numbers[15] = "fifteen"; numbers[16] = "sixteen"; numbers[17] = "seventeen";
+	numbers[18] = "eighteen"; numbers[19] = "nineteen"; numbers[20] = "twenty";
+	numbers[21] = "twenty-one"; numbers[22] = "twenty-two"; numbers[23] = "twenty-three";
+	numbers[24] = "twenty-four"; numbers[25] = "twenty-five"; numbers[26] = "twenty-six";
+	numbers[27] = "twenty-seven"; numbers[28] = "twenty-eight"; numbers[29] = "twenty-nine";
+	numbers[30] = "thirty";
+	
+	// Creating .pddl file
+	ofstream outFile;
+	string outFileName = "sudoku_" + to_string(probNum) + ".pddl";
+	outFile.open(outFileName);
+
+	// Checks if the boardSize actually matches the input file
+	// If it doesn't, delete file that was created
+	string testLine;
+	getline(fileIn, testLine);
+	// cout << "boardSize: " << boardSize << endl;
+	// cout << "testLine.size(): " << testLine.size() << endl;
+	if (boardSize != testLine.size()) {
+		cout << "Error: Inputted board size does not match input file board." << endl;
+		cout << "Deleting file that was created...";
+		int removeMarker = remove(outFileName.c_str());
+		if (removeMarker != 0) {
+			cout << "Failed." << endl;
+			cout << "Error: Problem with deleting file.";
+			cout << "Exiting program now." << endl;
+			exit(EXIT_FAILURE);
+		}
+		else cout << "Success!" << endl;
+		cout << "Exiting program now." << endl;
+		exit(EXIT_FAILURE);
 	}
-	else cout << "Success!" << endl;
+
+	// Start writing to .pddl file
+	outFile << "(define\n";
+	outFile << "\t(problem sudoku_" << to_string(probNum) << ")\n";
+	outFile << "\t(:domain sudoku)\n";
+	outFile << "\t(:init\n";
+
+	for (int i = 0; i < boardSize; ++i) {
+		if (i < 9)
+			outFile << "\t\t(= (value_of " << numbers[i + 1] << ") " << i + 1 << ")\n";
+		else if (i >= 9)
+			outFile << "\t\t(= (value_of " << numbers[i + 1] << ") " << (char)(i + 56) << ")\n";
+	}
+	outFile << "\n";
 
 	// Produces cell_value clauses
 	string line;
 	int rowNum = 0;
+	fileIn.close();
+	fileIn.open(inFileName);
 	while (fileIn.good()) {
 		while (!fileIn.eof()) {
 			getline(fileIn, line);
 			++rowNum;
 			for (int i = 0; i < line.size(); ++i) {
-				outFile << "\t\t(= (cell_value " + numbers[rowNum] + " " + numbers[i + 1] + ") ";
+				outFile << "\t\t(= (cell_value " << numbers[rowNum] << " " << numbers[i + 1] << ") ";
 				if (line[i] == '.')
 					outFile << "0)\n";
 				else {
@@ -118,7 +169,7 @@ int main()
 			++rowNum;
 			for (int i = 0; i < line.size(); ++i) {
 				if (line[i] != '.')
-					outFile << "\t\t(value_assigned " + numbers[rowNum] + " " + numbers[i + 1] + ")\n";
+					outFile << "\t\t(value_assigned " << numbers[rowNum] << " " << numbers[i + 1] << ")\n";
 			}
 			if (line.size() > 0)
 				outFile << "\n";
@@ -132,7 +183,7 @@ int main()
 		for (int j = 0; j < boardSize; ++j)
 		{
 			
-			outFile << "\t\t(value_assigned " + numbers[i + 1] + " " + numbers[j + 1] + ")";
+			outFile << "\t\t(value_assigned " << numbers[i + 1] << " " << numbers[j + 1] << ")";
 			if (i == 8 && j == 8)
 				outFile << ")\n";
 			else if (j == 8)
